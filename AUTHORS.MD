@@ -4,4 +4,4 @@ This file lists the names of individuals who have made substantial contributions
 
 ## Contributors
 
-- [Kusuma](https://github.com/ChyKusuma)
+- [Kusuma](https://github.com/ChyKusuma) - [thekoesoemo@gmail.com](mailto:thekoesoemo@gmail.com)
