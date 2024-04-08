@@ -9,7 +9,6 @@
 # The code has not been audited and does not come with any security guarantees.
 # --------------------------------------
 
-
 import time
 from datetime import datetime
 from db import Database

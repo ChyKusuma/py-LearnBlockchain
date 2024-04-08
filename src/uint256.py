@@ -9,6 +9,8 @@
 # The code has not been audited and does not come with any security guarantees.
 # --------------------------------------
 
+import hashlib
+import random  # Import the random library for generating random numbers
 import sys
 from decimal import Decimal
 from tiny import TinyUint256  # Import TinyUint256 from tiny.py
@@ -16,6 +18,20 @@ from tiny import TinyUint256  # Import TinyUint256 from tiny.py
 class uint256:
     WORD_SIZE_BYTES = 32
     WORD_SIZE_BITS = WORD_SIZE_BYTES * 8
+
+    @staticmethod
+    def generate_random_uint256(seed=None):
+        if seed is None:
+            # Generate a random seed if none provided
+            seed = str(random.getrandbits(256))  # Generate a 256-bit random number as seed
+        
+        # Use hashlib to hash the seed and convert it to an integer
+        hashed_seed = hashlib.sha256(seed.encode()).digest()
+        random_number = int.from_bytes(hashed_seed, byteorder='big')
+        
+        # Ensure the random number is within the range of a uint256
+        random_number %= 2 ** 256
+        return uint256(random_number)
 
     def __init__(self, value=0):
         if isinstance(value, str):
