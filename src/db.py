@@ -41,6 +41,12 @@ class Database:
                             account.wallet_address, amount_value, amount_currency, account.account_type))
         self.connection.commit()
 
+    def insert_block(self, block):
+        self.cursor.execute('''INSERT INTO blocks (index, timestamp, previous_hash, nonce, hash, merkle_root)
+                            VALUES (?, ?, ?, ?, ?, ?)''',
+                            (block.index, block.timestamp, block.previous_hash, block.nonce, block.hash, block.merkle_root))
+        self.connection.commit()
+
     def check_account_exists(self, wallet_address):
         self.cursor.execute("SELECT * FROM accounts WHERE wallet_address=?", (wallet_address,))
         return self.cursor.fetchone() is not None

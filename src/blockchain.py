@@ -9,8 +9,10 @@
 # The code has not been audited and does not come with any security guarantees.
 # --------------------------------------
 
+
 import time
 from datetime import datetime
+from db import Database
 from block import Block
 from serialized import serialize, deserialize
 from trees import MerkleTree
@@ -18,16 +20,17 @@ from config import blockchain_config
 from uint256 import uint256
 
 class Blockchain:
-    def __init__(self):
+    def __init__(self, db):
         self.chain = []
         self.pending_transactions = []
+        self.db = db  # Database instance
 
         # Create the genesis block
         self.create_genesis_block()
 
     def create_genesis_block(self):
         # Manually create the genesis block with index 0 and previous hash "0"
-        genesis_block = Block(0, [], time.time(), "0")
+        genesis_block = Block(0, [])  # Remove the timestamp argument as it's generated automatically
         # Set the genesis block data from config
         genesis_block.data = blockchain_config.genesis_block_data
         # Mine the genesis block
@@ -53,6 +56,7 @@ class Blockchain:
     def mine_block(self):
         # Get the current timestamp
         timestamp = time.time()
+        timestamp_str = datetime.utcfromtimestamp(timestamp).strftime('%d %b %y %H:%M:%S')  # Format the timestamp
 
         # Check if the chain is empty, indicating the genesis block
         if len(self.chain) == 0:
@@ -67,6 +71,7 @@ class Blockchain:
             new_block = Block(index, self.pending_transactions, timestamp, previous_hash)
 
         print("Mining block with index:", new_block.index, flush=True)  # Print the index of the block being mined
+        print("Mining block with timestamp:", timestamp_str, flush=True)  # Print the timestamp in the desired format
         print("Mining block...", flush=True)
 
         # Mine the block
@@ -95,15 +100,16 @@ class Blockchain:
         # Clear the list of pending transactions
         self.pending_transactions = []
 
-
     def create_merkle_tree(self):
         # Construct a Merkle tree for the pending transactions
         merkle_tree = MerkleTree([uint256(transaction.transaction_id) for transaction in self.pending_transactions])
         return merkle_tree
 
     def add_block(self, block):
-        # Validate the new block before adding it to the chain
         if self.is_valid_block(block):
+            # Save block details into the database
+            self.db.insert_block(block)
+            
             # Compute the Merkle root for the block's transactions
             merkle_tree = self.create_merkle_tree()
             block.merkle_root = merkle_tree.get_merkle_root()

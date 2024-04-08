@@ -78,8 +78,30 @@ class PBFTConsensus:
             self.blockchain.add_block(message.block)
 
     def validate_preprepare(self, message):
-        # Add validation logic here (e.g., check view, block integrity, etc.)
-        return True  # For simplicity, assume always valid
+        # Check if the message contains all required fields
+        if 'view' not in message or 'block' not in message or 'sequence_number' not in message or 'sender' not in message:
+            return False
+        
+        # Check view number
+        expected_view = self.get_expected_view()  # Implement get_expected_view() method
+        if message['view'] != expected_view:
+            return False
+        
+        # Check block integrity (assuming a function validate_block_integrity() is implemented)
+        if not validate_block_integrity(message['block']):
+            return False
+        
+        # Check sequence number
+        expected_sequence_number = self.get_expected_sequence_number(message['view'])  # Implement get_expected_sequence_number() method
+        if message['sequence_number'] != expected_sequence_number:
+            return False
+        
+        # Check sender authorization (assuming a function is_sender_authorized() is implemented)
+        if not is_sender_authorized(message['sender']):
+            return False
+        
+        # All checks passed, message is valid
+        return True
 
     def process_prepare(self, message):
         # Collect prepare messages for the block hash

@@ -22,7 +22,7 @@ class Block:
         self.index = index
         self.transactions = transactions
         self.timestamp = time()  # Set timestamp to current time
-        self.timestamp_str = datetime.utcfromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')  # Convert timestamp to string
+        self.timestamp_str = datetime.utcfromtimestamp(self.timestamp).strftime('%d %b %y %H:%M:%S')
         self.previous_hash = previous_hash
         self.nonce = 0
         self.hash = self.compute_hash()

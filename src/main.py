@@ -15,7 +15,6 @@ from transaction import CoinbaseTransaction
 from account import Account
 from amount import Amount
 from blockchain import Blockchain  # Import the Blockchain class
-from time import time
 
 if __name__ == "__main__":
     # Create a database object
@@ -55,10 +54,10 @@ if __name__ == "__main__":
         print("Core Developer account already exists in the database.")
 
     # Create a blockchain instance and append the mined genesis block
-    blockchain = Blockchain()
+    blockchain = Blockchain(db)
 
     # Mining Genesis Block
-    genesis_block = Block(0, [], time(), "")  # Set previous hash to empty string
+    genesis_block = Block(0, [])  # Set previous hash to empty string
     genesis_block.transactions.append(coinbase_transaction)
     genesis_block.mine_block()  # Mine the genesis block
     print("Genesis block mined successfully!")
@@ -68,11 +67,11 @@ if __name__ == "__main__":
     # Append the mined genesis block to the blockchain
     blockchain.chain.append(genesis_block)
 
-    # Display the blockchain after mining the genesis block
+    # Call the display_chain method to print the blockchain information
     blockchain.display_chain()
 
     # Mine the next block
-    next_block = Block(genesis_block.index + 1, [], time(), genesis_block.hash)
+    next_block = Block(genesis_block.index + 1, [], genesis_block.hash)
     next_block.mine_block()
     print("Block mined successfully!")
     print("Index:", next_block.index)
@@ -81,7 +80,7 @@ if __name__ == "__main__":
     # Append the mined block to the blockchain
     blockchain.chain.append(next_block)
 
-    # Display the blockchain after mining the next block
+    # Call the display_chain method again to print the updated blockchain information
     blockchain.display_chain()
 
     # Close the database connection (no longer necessary as handled by the Database class)
