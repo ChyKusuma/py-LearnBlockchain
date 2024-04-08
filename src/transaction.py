@@ -15,19 +15,17 @@ from amount import Amount
 import mempool
 
 from serialized import serialize, deserialize
-from uint256 import uint256
 
 class Transaction:
     def __init__(self, sender, recipient, amount):
         self.sender = sender
         self.recipient = recipient
         self.amount = amount
-        self.transaction_id = self.compute_transaction_id()
+        self.transaction_id = self.compute_transaction_id()  # Generate transaction ID
 
     def compute_transaction_id(self):
         # Generate a unique transaction ID using sender, recipient, and amount
-        data = self.sender + self.recipient + str(self.amount.value) + self.amount.currency
-        return uint256(data).compute_sha256()
+        return hashlib.sha256((self.sender + self.recipient + str(self.amount.value) + self.amount.currency).encode()).hexdigest()
 
     def to_obj(self):
         # Serialize the object directly
@@ -67,8 +65,7 @@ class CoinbaseTransaction:
 
     def compute_transaction_id(self):
         # Generate a unique transaction ID using recipient and amount
-        data = self.recipient + str(self.amount.value) + self.amount.currency
-        return uint256(data).compute_sha256()
+        return hashlib.sha256((self.recipient + str(self.amount.value) + self.amount.currency).encode()).hexdigest()
 
     def to_obj(self):
         return {
