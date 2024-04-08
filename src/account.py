@@ -11,7 +11,7 @@
 
 from transaction import Transaction, CoinbaseTransaction
 import mempool
-from amount import Amount  # Import the Amount class
+from amount import Amount
 from db import Database
 
 import sqlite3

@@ -19,16 +19,12 @@ class MerkleTree:
 
     def compute_merkle_root(self):
         if len(self.transaction_ids) == 0:
-            return None
+            return self.compute_empty_hash()
         if len(self.transaction_ids) == 1:
             return self.transaction_ids[0]
 
         # List to store intermediate hash values
-        intermediate_hashes = []
-
-        # Compute the Merkle root from the transaction IDs
-        for tx_id in self.transaction_ids:
-            intermediate_hashes.append(hashlib.sha256(tx_id.to_bytes(32, byteorder='big')).hexdigest())
+        intermediate_hashes = [tx_id.value for tx_id in self.transaction_ids]
 
         while len(intermediate_hashes) > 1:
             # If the number of hashes is odd, duplicate the last hash
@@ -36,8 +32,8 @@ class MerkleTree:
                 intermediate_hashes.append(intermediate_hashes[-1])
 
             # Pair adjacent hashes and hash them together
-            paired_hashes = [intermediate_hashes[i] + intermediate_hashes[i + 1] for i in range(0, len(intermediate_hashes), 2)]
-            intermediate_hashes = [hashlib.sha256(pair.encode()).hexdigest() for pair in paired_hashes]
+            paired_hashes = [b''.join(intermediate_hashes[i:i+2]) for i in range(0, len(intermediate_hashes), 2)]
+            intermediate_hashes = [uint256(hashlib.sha256(pair).digest()) for pair in paired_hashes]
 
         return intermediate_hashes[0]
 

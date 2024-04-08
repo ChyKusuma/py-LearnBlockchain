@@ -18,15 +18,14 @@ from datetime import datetime
 from uint256 import uint256
 
 class Block:
-    def __init__(self, index, transactions, timestamp=None, previous_hash=None):
+    def __init__(self, index, transactions, previous_hash=None):
         self.index = index
         self.transactions = transactions
-        self.timestamp = timestamp if timestamp else time()
+        self.timestamp = time()  # Set timestamp to current time
         self.timestamp_str = datetime.utcfromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')  # Convert timestamp to string
         self.previous_hash = previous_hash
         self.nonce = 0
         self.hash = self.compute_hash()
-        self.merkle_root = self.compute_merkle_root()
         self.max_block_size = blockchain_config.max_block_size
         self.block_interval = blockchain_config.block_interval
         self.block_header = {
@@ -63,28 +62,6 @@ class Block:
     def add_transaction(self, transaction):
         self.transactions.append(transaction)
 
-    def compute_merkle_root(self):
-        if len(self.transactions) == 0:
-            return None
-        if len(self.transactions) == 1:
-            return self.transactions[0].transaction_id
-
-        intermediate_hashes = []
-
-        # Compute the Merkle root from the transaction IDs
-        transaction_ids = [uint256(transaction.transaction_id) for transaction in self.transactions]  # Convert to uint256
-        for tx_id in transaction_ids:
-            intermediate_hashes.append(hashlib.sha256(tx_id.to_bytes(32, byteorder='big')).hexdigest())
-
-        while len(intermediate_hashes) > 1:
-            if len(intermediate_hashes) % 2 != 0:
-                intermediate_hashes.append(intermediate_hashes[-1])
-
-            paired_hashes = [intermediate_hashes[i] + intermediate_hashes[i + 1] for i in range(0, len(intermediate_hashes), 2)]
-            intermediate_hashes = [hashlib.sha256(pair.encode()).hexdigest() for pair in paired_hashes]
-
-        return intermediate_hashes[0]
-
     def mine_block(self):
         attempt_count = 0  # Initialize attempt counter
         
@@ -118,7 +95,7 @@ class Block:
             "previous_hash": self.previous_hash,
             "nonce": self.nonce,
             "hash": self.hash,
-            "merkle_root": self.merkle_root
+            "merkle_root": self.merkle_root  # You can remove this line
         }
 
     def serialize(self):
@@ -130,4 +107,5 @@ class Block:
         # Deserialize the serialized data using the deserialize function
         data = deserialize(serialized_data)
         transactions = [Transaction.from_obj(tx) for tx in data['transactions']]
-        return Block(data['index'], transactions, data['timestamp'], data['previous_hash'])
+        return Block(data['index'], transactions, data['previous_hash'])
+
