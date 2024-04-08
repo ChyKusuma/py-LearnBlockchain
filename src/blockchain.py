@@ -11,6 +11,8 @@
 
 import time
 import hashlib
+
+from datetime import datetime
 from block import Block
 from serialized import serialize, deserialize
 from trees import MerkleTree
@@ -50,17 +52,20 @@ class Blockchain:
             print("---------------")
 
     def mine_block(self):
+        # Get the current timestamp
+        timestamp = time()
+
         # Check if the chain is empty, indicating the genesis block
         if len(self.chain) == 0:
             # Create a new block with index 0 and no previous hash for the genesis block
-            new_block = Block(0, self.pending_transactions, self.timestamp, "")
+            new_block = Block(0, self.pending_transactions, timestamp, "")
         else:
             # Get the index of the last block
             index = self.chain[-1].index + 1
             # Get the hash of the last block
             previous_hash = self.chain[-1].hash
-            # Create a new block with the pending transactions
-            new_block = Block(index, self.pending_transactions, self.timestamp, previous_hash)
+            # Create a new block with the pending transactions and current timestamp
+            new_block = Block(index, self.pending_transactions, timestamp, previous_hash)
 
         print("Mining block with index:", new_block.index, flush=True)  # Print the index of the block being mined
         print("Mining block...", flush=True)

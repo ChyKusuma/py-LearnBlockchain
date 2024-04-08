@@ -23,7 +23,6 @@ class Block:
         self.timestamp = timestamp if timestamp else time()
         self.timestamp_str = datetime.utcfromtimestamp(self.timestamp).strftime('%Y-%m-%d %H:%M:%S')  # Convert timestamp to string
         self.previous_hash = previous_hash
-        self.previous_hash = previous_hash
         self.nonce = 0
         self.hash = self.compute_hash()
         self.merkle_root = self.compute_merkle_root()
