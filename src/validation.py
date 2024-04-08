@@ -9,18 +9,23 @@
 # The code has not been audited and does not come with any security guarantees.
 # --------------------------------------
 
-from config import DIFFICULTY
+from config import blockchain_config
 
 class Validation:
     @staticmethod
     def validate_proof_of_work(block_hash):
         # Check if the block hash meets the difficulty requirement
-        return block_hash.startswith('0' * DIFFICULTY)
+        return block_hash.startswith('0' * blockchain_config.difficulty)
+
+    @staticmethod
+    def validate_block(block, previous_block):
+        # Delegate block validation to consensus.py or handle here
+        pass
 
     @staticmethod
     def validate_genesis_block(genesis_block, Block):
         # Check if the genesis block has the correct index, previous_hash, and difficulty
-        return genesis_block.index == 0 and genesis_block.previous_hash == "0" and genesis_block.hash.startswith('0' * Block.DIFFICULTY)
+        return genesis_block.index == 0 and genesis_block.previous_hash == "0" and genesis_block.hash.startswith('0' * blockchain_config.difficulty)
     
     @staticmethod
     def validate_block(block, previous_block, Block):
@@ -33,7 +38,7 @@ class Validation:
             return False
 
         # Verify the proof of work (PoW) for the new block
-        if not Validation.validate_proof_of_work(block):
+        if not Validation.validate_proof_of_work(block.hash):
             return False
 
         # Additional validations can be added here
@@ -43,4 +48,4 @@ class Validation:
     @staticmethod
     def validate_proof_of_work(block, Block):
         # Check if the block hash meets the difficulty requirement
-        return block.hash.startswith('0' * Block.DIFFICULTY)
+        return block.hash.startswith('0' * blockchain_config.difficulty)

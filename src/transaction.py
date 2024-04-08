@@ -15,17 +15,19 @@ from amount import Amount
 import mempool
 
 from serialized import serialize, deserialize
+from uint256 import uint256
 
 class Transaction:
     def __init__(self, sender, recipient, amount):
         self.sender = sender
         self.recipient = recipient
         self.amount = amount
-        self.transaction_id = self.compute_transaction_id()  # Generate transaction ID
+        self.transaction_id = self.compute_transaction_id()
 
     def compute_transaction_id(self):
         # Generate a unique transaction ID using sender, recipient, and amount
-        return hashlib.sha256((self.sender + self.recipient + str(self.amount.value) + self.amount.currency).encode()).hexdigest()
+        data = self.sender + self.recipient + str(self.amount.value) + self.amount.currency
+        return uint256(data).compute_sha256()
 
     def to_obj(self):
         # Serialize the object directly

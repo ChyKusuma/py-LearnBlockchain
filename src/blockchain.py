@@ -14,7 +14,7 @@ import hashlib
 from block import Block
 from serialized import serialize, deserialize
 from trees import MerkleTree
-from config import DIFFICULTY
+from config import blockchain_config
 
 class Blockchain:
     def __init__(self):
@@ -27,6 +27,8 @@ class Blockchain:
     def create_genesis_block(self):
         # Manually create the genesis block with index 0 and previous hash "0"
         genesis_block = Block(0, [], time.time(), "0")
+        # Set the genesis block data from config
+        genesis_block.data = blockchain_config.genesis_block_data
         # Mine the genesis block
         genesis_block.mine_block()
         # Append the mined genesis block to the chain
@@ -51,14 +53,14 @@ class Blockchain:
         # Check if the chain is empty, indicating the genesis block
         if len(self.chain) == 0:
             # Create a new block with index 0 and no previous hash for the genesis block
-            new_block = Block(0, self.pending_transactions, time.time(), "")
+            new_block = Block(0, self.pending_transactions, self.timestamp, "")
         else:
             # Get the index of the last block
             index = self.chain[-1].index + 1
             # Get the hash of the last block
             previous_hash = self.chain[-1].hash
             # Create a new block with the pending transactions
-            new_block = Block(index, self.pending_transactions, time.time(), previous_hash)
+            new_block = Block(index, self.pending_transactions, self.timestamp, previous_hash)
 
         print("Mining block with index:", new_block.index, flush=True)  # Print the index of the block being mined
         print("Mining block...", flush=True)
@@ -75,7 +77,7 @@ class Blockchain:
             print(f"Attempt {attempt_count}: Hash Result: {new_block.hash}", flush=True)  # Print the current hash attempt
 
             # Check if the hash meets the difficulty requirement
-            if new_block.hash.startswith('0' * DIFFICULTY):
+            if new_block.hash.startswith('0' * blockchain_config.difficulty):  # Use blockchain_config.difficulty
                 print("Block mined successfully!", flush=True)
                 break  # Exit the loop if a valid hash is found
             else:
@@ -88,6 +90,7 @@ class Blockchain:
 
         # Clear the list of pending transactions
         self.pending_transactions = []
+
 
     def create_merkle_tree(self):
         # Construct a Merkle tree for the pending transactions
@@ -141,12 +144,12 @@ class Blockchain:
 
     def is_valid_proof(self, block):
         # Check if the block hash meets the difficulty requirement
-        return block.hash.startswith('0' * DIFFICULTY)
+        return block.hash.startswith('0' * blockchain_config.difficulty)
 
     def mine_pending_transactions(self):
         # Create a new block with the pending transactions and mine it
         new_block = Block(len(self.chain), self.pending_transactions, time.time(), self.chain[-1].hash)
-        new_block.mine_block(DIFFICULTY)  # Mine the block with PoW
+        new_block.mine_block(blockchain_config.difficulty)  # Mine the block with PoW using blockchain_config.difficulty
         self.chain.append(new_block)
 
         # Clear the list of pending transactions

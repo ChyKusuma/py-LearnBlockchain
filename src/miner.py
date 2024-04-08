@@ -14,6 +14,7 @@ from pow import mine_block_with_pow
 from block import Block
 from blockchain import Blockchain  # Import the Blockchain class
 import time
+from config import blockchain_config
 
 def mine_block_and_add_to_blockchain(blockchain):
     # Create a new block
@@ -26,7 +27,7 @@ def mine_block_and_add_to_blockchain(blockchain):
     pending_transactions = mempool.get_pending_transactions()
 
     # Mine the block with Proof of Work, including pending transactions
-    mined_block = mine_block_with_pow(block, Block.DIFFICULTY, "miner_address", mempool=pending_transactions)
+    mined_block = mine_block_with_pow(block, blockchain_config.difficulty, "miner_address", mempool=pending_transactions)
 
     # Verify mined block
     if mined_block is not None:
