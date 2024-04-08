@@ -10,10 +10,11 @@
 # --------------------------------------
 
 import hashlib
+from uint256 import uint256
 
 class MerkleTree:
     def __init__(self, transaction_ids):
-        self.transaction_ids = transaction_ids
+        self.transaction_ids = [uint256(tx_id) for tx_id in transaction_ids]
         self.merkle_root = self.compute_merkle_root()
 
     def compute_merkle_root(self):
@@ -27,7 +28,7 @@ class MerkleTree:
 
         # Compute the Merkle root from the transaction IDs
         for tx_id in self.transaction_ids:
-            intermediate_hashes.append(hashlib.sha256(tx_id.encode()).hexdigest())
+            intermediate_hashes.append(hashlib.sha256(tx_id.to_bytes(32, byteorder='big')).hexdigest())
 
         while len(intermediate_hashes) > 1:
             # If the number of hashes is odd, duplicate the last hash

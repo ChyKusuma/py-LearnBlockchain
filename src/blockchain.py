@@ -10,13 +10,12 @@
 # --------------------------------------
 
 import time
-import hashlib
-
 from datetime import datetime
 from block import Block
 from serialized import serialize, deserialize
 from trees import MerkleTree
 from config import blockchain_config
+from uint256 import uint256
 
 class Blockchain:
     def __init__(self):
@@ -53,7 +52,7 @@ class Blockchain:
 
     def mine_block(self):
         # Get the current timestamp
-        timestamp = time()
+        timestamp = time.time()
 
         # Check if the chain is empty, indicating the genesis block
         if len(self.chain) == 0:
@@ -99,7 +98,7 @@ class Blockchain:
 
     def create_merkle_tree(self):
         # Construct a Merkle tree for the pending transactions
-        merkle_tree = MerkleTree([transaction.transaction_id for transaction in self.pending_transactions])
+        merkle_tree = MerkleTree([uint256(transaction.transaction_id) for transaction in self.pending_transactions])
         return merkle_tree
 
     def add_block(self, block):

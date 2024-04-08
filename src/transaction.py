@@ -67,7 +67,8 @@ class CoinbaseTransaction:
 
     def compute_transaction_id(self):
         # Generate a unique transaction ID using recipient and amount
-        return hashlib.sha256((self.recipient + str(self.amount.value) + self.amount.currency).encode()).hexdigest()
+        data = self.recipient + str(self.amount.value) + self.amount.currency
+        return uint256(data).compute_sha256()
 
     def to_obj(self):
         return {

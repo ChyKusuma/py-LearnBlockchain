@@ -15,6 +15,7 @@ from time import time
 from transaction import Transaction, CoinbaseTransaction
 from config import blockchain_config
 from datetime import datetime
+from uint256 import uint256
 
 class Block:
     def __init__(self, index, transactions, timestamp=None, previous_hash=None):
@@ -71,9 +72,9 @@ class Block:
         intermediate_hashes = []
 
         # Compute the Merkle root from the transaction IDs
-        transaction_ids = [transaction.transaction_id for transaction in self.transactions]
+        transaction_ids = [uint256(transaction.transaction_id) for transaction in self.transactions]  # Convert to uint256
         for tx_id in transaction_ids:
-            intermediate_hashes.append(hashlib.sha256(tx_id.encode()).hexdigest())
+            intermediate_hashes.append(hashlib.sha256(tx_id.to_bytes(32, byteorder='big')).hexdigest())
 
         while len(intermediate_hashes) > 1:
             if len(intermediate_hashes) % 2 != 0:
