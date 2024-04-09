@@ -74,7 +74,6 @@ class Blockchain:
             print("Timestamp:", timestamp_str)
             print("---------------")
 
-
     def mine_block(self):
         # Get the current timestamp
         timestamp = time.time()

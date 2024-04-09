@@ -79,4 +79,3 @@ if __name__ == "__main__":
 
     # Close the database connection (no longer necessary as handled by the Database class)
     db.close()
-

@@ -26,29 +26,38 @@ To test and run the program, simply execute the following command in the termina
 
 ## My tests result (Updated)
 
-- Index: 1  
-- Hash: 000014ee89fccbb39dd8a96ca2eb6542c6ae74be49d00da639a283b33b007580  
-- Block Index: 1  
-- Previous Hash: 0000a933eb8dc6fdf241638ca523abbbe46bb1cb95e5a2a34468611ef4243b40  
-- Hash: 000014ee89fccbb39dd8a96ca2eb6542c6ae74be49d00da639a283b33b007580  
-- Transactions:  
-- Timestamp: 09 Apr 24 10:48:22
+`python3 main.py`
+- Table 'accounts' already exists.
+- Core Developer's Public Key Hash: 4ea81a7c6763cfbd6f3a226e60beb3caa1d7b07a
+- Core Developer's Wallet Address: 1CD5YecosxDEKihsr4ZXvrPghWymx4C9PX
+- Mining Reward: <transaction.CoinbaseTransaction object at 0x108175810>
+- Core Developer account created and inserted into the database.
 ---------------
-- Block Index: 0  
-- Previous Hash: None  
-- Hash: 0000a933eb8dc6fdf241638ca523abbbe46bb1cb95e5a2a34468611ef4243b40  
-- Transactions:  
-- Transaction ID: d87cd69e6c2c214d838b49d1ca95249ab5439b6ae69004c0524eb67052ae886a  
-- Type: Coinbase Transaction  
-- Reward Amount: 10 COINS  
+- Block mined successfully!
+- Block mined successfully!
+- Index: 1
+- Hash: 000012b1709f710b18097826ecbce0aac285b448a664c249091250d11853c4ba
+- Block Index: 1
+- Previous Hash: 0000f12d3f8944929541a112b346c2a4b90fdc275b0801210cdbb16909aed97d
+- Hash: 000012b1709f710b18097826ecbce0aac285b448a664c249091250d11853c4ba
+- Transactions:
+- Timestamp: 09 Apr 24 11:49:26
 ---------------
-- Timestamp: 09 Apr 24 10:48:14  
+- Block Index: 0
+- Previous Hash: None
+- Hash: 0000f12d3f8944929541a112b346c2a4b90fdc275b0801210cdbb16909aed97d
+- Transactions:
+- Transaction ID: d87cd69e6c2c214d838b49d1ca95249ab5439b6ae69004c0524eb67052ae886a
+- Type: Coinbase Transaction
+- Reward Amount: 10 COINS
 ---------------
-- Block Index: 0  
-- Previous Hash: None  
-- Hash: 0000efbd6e9a907310e69594987fdfa8793a132cbc43f02c102e983b12edb79e  
-- Transactions:  
-- Timestamp: 09 Apr 24 10:48:12  
+- Timestamp: 09 Apr 24 11:49:26
+---------------
+- Block Index: 0
+- Previous Hash: None
+- Hash: 0000f75108b9a1352134fb4bd499588157e244e75d9bb2e85826750e9faf79e4
+- Transactions:
+- Timestamp: 09 Apr 24 11:49:24
 ---------------
 
 
