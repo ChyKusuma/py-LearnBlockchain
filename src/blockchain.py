@@ -17,40 +17,63 @@ from serialized import serialize, deserialize
 from trees import MerkleTree
 from config import blockchain_config
 from uint256 import uint256
+from transaction import CoinbaseTransaction
 
 class Blockchain:
     def __init__(self, db):
         self.chain = []
         self.pending_transactions = []
         self.db = db  # Database instance
+        self.genesis_block_displayed = False  # Flag to track whether the genesis block has been displayed
 
-        # Create the genesis block
-        self.create_genesis_block()
+        # Create the genesis block if the chain is empty
+        if not self.chain:
+            self.create_genesis_block()
 
     def create_genesis_block(self):
-        # Manually create the genesis block with index 0 and previous hash "0"
-        genesis_block = Block(0, [])  # Remove the timestamp argument as it's generated automatically
-        # Set the genesis block data from config
-        genesis_block.data = blockchain_config.genesis_block_data
-        # Mine the genesis block
-        genesis_block.mine_block()
-        # Append the mined genesis block to the chain
-        self.chain.append(genesis_block)
+        # Check if the chain is empty before creating the genesis block
+        if not self.chain:
+            # Manually create the genesis block with index 0 and previous hash "0"
+            genesis_block = Block(0, [])  # Remove the timestamp argument as it's generated automatically
+            genesis_block.index = 0  # Set the index explicitly
+            # Set the genesis block data from config
+            genesis_block.data = blockchain_config.genesis_block_data
+            # Mine the genesis block
+            genesis_block.mine_block()
+            # Append the mined genesis block to the chain
+            self.chain.append(genesis_block)
+            print("Genesis block mined successfully and added to the chain.")
+        else:
+            print("Genesis block already exists.")
 
     def display_chain(self):
         # Display the entire blockchain
-        for block in self.chain:
+        for block in reversed(self.chain):  # Reverse the chain to display the genesis block first
+            if block.index == 0 and not self.genesis_block_displayed:
+                print("Index: 0")
+                self.genesis_block_displayed = True  # Set the flag to True after displaying the genesis block once
             print("Block Index:", block.index)
             print("Previous Hash:", block.previous_hash)
             print("Hash:", block.hash)
             print("Transactions:")
-
-            # Print block header
-            print("Block Header:")
-            for key, value in block.block_header.items():
-                print(f"{key}: {value}")
-
+            for transaction in block.transactions:
+                print("Transaction ID:", transaction.transaction_id)  # Display transaction ID
+                # Check if it's a CoinbaseTransaction
+                if isinstance(transaction, CoinbaseTransaction):
+                    print("Type: Coinbase Transaction")  # Print type
+                    print("Reward Amount:", transaction.amount.value, transaction.amount.currency)  # Print reward amount
+                else:
+                    # Regular transaction
+                    print("Sender:", transaction.sender)  # Display sender
+                    print("Recipient:", transaction.recipient)  # Display recipient
+                    print("Amount:", transaction.amount.value, transaction.amount.currency)  # Display amount
+                    print("Transaction Type:", transaction.transaction_type)  # Display transaction type
+                print("---------------")
+            # Print timestamp in the desired format
+            timestamp_str = datetime.utcfromtimestamp(block.timestamp).strftime('%d %b %y %H:%M:%S')
+            print("Timestamp:", timestamp_str)
             print("---------------")
+
 
     def mine_block(self):
         # Get the current timestamp
@@ -59,8 +82,9 @@ class Blockchain:
 
         # Check if the chain is empty, indicating the genesis block
         if len(self.chain) == 0:
-            # Create a new block with index 0 and no previous hash for the genesis block
+            # Manually create the genesis block with index 0 and no previous hash
             new_block = Block(0, self.pending_transactions, timestamp, "")
+            print("Mining genesis block...", flush=True)
         else:
             # Get the index of the last block
             index = self.chain[-1].index + 1
@@ -68,9 +92,9 @@ class Blockchain:
             previous_hash = self.chain[-1].hash
             # Create a new block with the pending transactions and current timestamp
             new_block = Block(index, self.pending_transactions, timestamp, previous_hash)
+            print("Mining block with index:", new_block.index, flush=True)  # Print the index of the block being mined
+            print("Mining block with timestamp:", timestamp_str, flush=True)  # Print the timestamp
 
-        print("Mining block with index:", new_block.index, flush=True)  # Print the index of the block being mined
-        print("Mining block with timestamp:", timestamp_str, flush=True)  # Print the timestamp in the desired format
         print("Mining block...", flush=True)
 
         # Mine the block
@@ -98,6 +122,9 @@ class Blockchain:
 
         # Clear the list of pending transactions
         self.pending_transactions = []
+
+        # Reset the flag to False after mining a block
+        self.genesis_block_displayed = False
 
     def create_merkle_tree(self):
         # Construct a Merkle tree for the pending transactions

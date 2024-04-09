@@ -22,7 +22,6 @@ class Block:
         self.index = index
         self.transactions = transactions
         self.timestamp = time()  # Set timestamp to current time
-        self.timestamp_str = datetime.utcfromtimestamp(self.timestamp).strftime('%d %b %y %H:%M:%S')
         self.previous_hash = previous_hash
         self.nonce = 0
         self.hash = self.compute_hash()
@@ -65,18 +64,6 @@ class Block:
     def mine_block(self):
         attempt_count = 0  # Initialize attempt counter
         
-        # Special case for the genesis block
-        if self.index == 0:
-            self.previous_hash = "0"  # Set previous hash to "0"
-            while self.hash[:blockchain_config.difficulty] != '0' * blockchain_config.difficulty:
-                self.nonce += 1
-                self.hash = self.compute_hash()
-                attempt_count += 1
-                print(f"Attempt {attempt_count}: Hash Result: {self.hash}")
-
-            print("Block mined successfully!")
-            return
-
         # Mine the block with the given difficulty
         while self.hash[:blockchain_config.difficulty] != '0' * blockchain_config.difficulty:
             self.nonce += 1
@@ -85,6 +72,9 @@ class Block:
             print(f"Attempt {attempt_count}: Hash Result: {self.hash}")
 
         print("Block mined successfully!")
+        
+        # Format the timestamp after mining
+        self.timestamp_str = datetime.utcfromtimestamp(self.timestamp).strftime('%d %b %y %H:%M:%S')
 
     def to_obj(self):
         # Serialize the block directly

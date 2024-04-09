@@ -17,6 +17,8 @@ class BlockchainConfig:
         self.max_block_size = 1024  # Maximum size of a block in bytes
         self.block_interval = 10  # Time interval between blocks in seconds
         self.genesis_block_data = "Genesis Block"  # Data for the genesis block
+        self.genesis_block_index = 0  # Index of the genesis block
+        self.genesis_block_previous_hash = "0"  # Previous hash of the genesis block
 
 # Singleton pattern to ensure there's only one configuration instance
 blockchain_config = BlockchainConfig()

@@ -29,26 +29,20 @@ if __name__ == "__main__":
     print("Core Developer's Public Key Hash:", core_dev_public_key_hash)
     print("Core Developer's Wallet Address:", core_dev_wallet_address)
 
-    # Define the mining reward
-    mining_reward = 10  # For example, set the mining reward to 10 units of the cryptocurrency
+    # Creating a miner reward transaction
+    miner_reward = CoinbaseTransaction("coinbase_address", Amount(10, "COINS"))  # Create a CoinbaseTransaction object
 
     # Print the mining reward
-    print("Mining Reward:", mining_reward)
+    print("Mining Reward:", miner_reward)
 
     # Check if the core developer's wallet address already exists in the database
     core_dev_exists = db.check_account_exists(core_dev_wallet_address)
 
-    # Retrieve the coinbase amount directly from the Amount class
-    core_dev_amount = Amount(mining_reward, "COINS")
-
-    # Create a CoinbaseTransaction object with the correct Amount object
-    coinbase_transaction = CoinbaseTransaction(core_dev_wallet_address, core_dev_amount)
-
     if not core_dev_exists:
         # Create an Account object for the core developer
-        core_dev_account = Account(core_dev_passphrase, core_dev_public_key_hash, core_dev_wallet_address, core_dev_amount, account_type="core-developer")
+        core_dev_account = Account(core_dev_passphrase, core_dev_public_key_hash, core_dev_wallet_address, miner_reward.amount, account_type="core-developer")
         # Insert the core developer's account data into the database
-        db.insert_account(core_dev_account)  # Corrected method call
+        db.insert_account(core_dev_account)
         print("Core Developer account created and inserted into the database.")
     else:
         print("Core Developer account already exists in the database.")
@@ -58,7 +52,7 @@ if __name__ == "__main__":
 
     # Mining Genesis Block
     genesis_block = Block(0, [])  # Set previous hash to empty string
-    genesis_block.transactions.append(coinbase_transaction)
+    genesis_block.transactions.append(miner_reward)  # Append the miner reward transaction
     genesis_block.mine_block()  # Mine the genesis block
     print("Genesis block mined successfully!")
     print("Index:", genesis_block.index)
@@ -85,3 +79,4 @@ if __name__ == "__main__":
 
     # Close the database connection (no longer necessary as handled by the Database class)
     db.close()
+

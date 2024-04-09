@@ -13,15 +13,15 @@
 import hashlib
 from amount import Amount
 import mempool
-
 from serialized import serialize, deserialize
 
 class Transaction:
-    def __init__(self, sender, recipient, amount):
+    def __init__(self, sender, recipient, amount, transaction_type=None):
         self.sender = sender
         self.recipient = recipient
         self.amount = amount
         self.transaction_id = self.compute_transaction_id()  # Generate transaction ID
+        self.transaction_type = transaction_type  # Include transaction type attribute
 
     def compute_transaction_id(self):
         # Generate a unique transaction ID using sender, recipient, and amount
@@ -33,7 +33,8 @@ class Transaction:
             "sender": self.sender,
             "recipient": self.recipient,
             "amount": self.amount.to_obj(),  # Serialize the amount object
-            "transaction_id": self.transaction_id
+            "transaction_id": self.transaction_id,
+            "transaction_type": self.transaction_type  # Serialize transaction type
         })
 
     @staticmethod
@@ -41,7 +42,8 @@ class Transaction:
         sender = data['sender']
         recipient = data['recipient']
         amount = Amount.from_obj(data['amount'])  # Deserialize the amount object
-        return Transaction(sender, recipient, amount)
+        transaction_type = data.get('transaction_type')  # Retrieve transaction type if available
+        return Transaction(sender, recipient, amount, transaction_type)
 
     def broadcast_to_mempool(self):
         # Add the transaction request to the mempool
@@ -55,7 +57,8 @@ class Transaction:
     def deserialize(serialized_data):
         data = deserialize(serialized_data)
         amount = Amount.from_obj(data['amount'])
-        return Transaction(data['sender'], data['recipient'], amount)
+        transaction_type = data.get('transaction_type')  # Retrieve transaction type if available
+        return Transaction(data['sender'], data['recipient'], amount, transaction_type)
 
 class CoinbaseTransaction:
     def __init__(self, recipient, amount):
