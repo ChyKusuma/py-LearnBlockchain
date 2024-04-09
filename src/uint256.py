@@ -129,8 +129,16 @@ class uint256:
 
     # Memset function
     @staticmethod
-    def memset():
-        return "memset!"
+    def memset(memory_block, value):
+        if not isinstance(memory_block, bytearray):
+            raise TypeError("Memory block must be a bytearray")
+        if not isinstance(value, int):
+            raise TypeError("Value must be an integer")
+        
+        for i in range(len(memory_block)):
+            memory_block[i] = value
+
+        return memory_block
 
     # Conversion function to TinyUint256
     def to_tiny_uint256(self):
@@ -165,3 +173,23 @@ class uint256:
         if result >= 2 ** 256:
             raise OverflowError("Exponentiation result exceeds 256 bits")
         return uint256(result)
+
+    # Bitwise operations
+    def bitwise_and(self, other):
+        return uint256(self.value & other.value)
+
+    def bitwise_or(self, other):
+        return uint256(self.value | other.value)
+
+    def bitwise_xor(self, other):
+        return uint256(self.value ^ other.value)
+
+    def bitwise_not(self):
+        return uint256(~self.value)
+
+    # Bit shift operations
+    def left_shift(self, n):
+        return uint256(self.value << n)
+
+    def right_shift(self, n):
+        return uint256(self.value >> n)
