@@ -26,40 +26,24 @@ To test and run the program, simply execute the following command in the termina
 
 ## My tests result (Updated)
 
-`python3 main.py`
-- Table 'accounts' already exists.
-- Core Developer's Public Key Hash: 4ea81a7c6763cfbd6f3a226e60beb3caa1d7b07a
-- Core Developer's Wallet Address: 1CD5YecosxDEKihsr4ZXvrPghWymx4C9PX
-- Mining Reward: <transaction.CoinbaseTransaction object at 0x108175810>
-- Core Developer account created and inserted into the database.
----------------
-- Block mined successfully!
-- Block mined successfully!
-- Index: 1
-- Hash: 000012b1709f710b18097826ecbce0aac285b448a664c249091250d11853c4ba
-- Block Index: 1
-- Previous Hash: 0000f12d3f8944929541a112b346c2a4b90fdc275b0801210cdbb16909aed97d
-- Hash: 000012b1709f710b18097826ecbce0aac285b448a664c249091250d11853c4ba
-- Transactions:
-- Timestamp: 09 Apr 24 11:49:26
----------------
-- Block Index: 0
-- Previous Hash: None
-- Hash: 0000f12d3f8944929541a112b346c2a4b90fdc275b0801210cdbb16909aed97d
-- Transactions:
-- Transaction ID: d87cd69e6c2c214d838b49d1ca95249ab5439b6ae69004c0524eb67052ae886a
-- Type: Coinbase Transaction
-- Reward Amount: 10 COINS
----------------
-- Timestamp: 09 Apr 24 11:49:26
----------------
-- Block Index: 0
-- Previous Hash: None
-- Hash: 0000f75108b9a1352134fb4bd499588157e244e75d9bb2e85826750e9faf79e4
-- Transactions:
-- Timestamp: 09 Apr 24 11:49:24
----------------
+`Block 2`
+- **Previous Hash**: 0000dbeb1289e8baf5e0b029ee49ac746b6628d2063927eef8e486532d617b92
+- **Hash**: 0000a3b55fa20cc226840daaaf395dbe0befeeb526d74d305250d110648fa153
+- **Transactions Timestamp**: 13 Apr 24 07:49:49
 
+`Block 1`
+- **Previous Hash**: 0000ebca739949e3270444c7da9b4e74cd0e5b57b788941c80dece225d45c8c6
+- **Hash**: 0000dbeb1289e8baf5e0b029ee49ac746b6628d2063927eef8e486532d617b92
+- **Transactions**
+  - **Transaction ID**: 273aeaf02833c85b8c560e7f6fb21cbcef08aafb36654087529c9b3d0f6bd0a7
+  - **Type**: Coinbase Transaction
+  - **Reward Amount**: 10 COINS
+- **Timestamp**: 13 Apr 24 07:49:48
+
+`Genesis Block 0`
+- **Previous Hash**: None
+- **Hash**: 0000ebca739949e3270444c7da9b4e74cd0e5b57b788941c80dece225d45c8c6
+- **Timestamp**: 13 Apr 24 07:49:46
 
 ## Installation Guide for Python3
 If Python3 is not installed on your system, follow these steps to install it:
@@ -85,5 +69,3 @@ If Python3 is not installed on your system, follow these steps to install it:
 
 
 This README provides information about the purpose of the blockchain software, its file usage, how to run the program, and a guide for installing Python3.
-
-

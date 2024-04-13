@@ -15,7 +15,6 @@ from time import time
 from transaction import Transaction, CoinbaseTransaction
 from config import blockchain_config
 from datetime import datetime
-from uint256 import uint256
 
 class Block:
     def __init__(self, index, transactions, previous_hash=None):
@@ -63,7 +62,7 @@ class Block:
 
     def mine_block(self):
         attempt_count = 0  # Initialize attempt counter
-        
+            
         # Mine the block with the given difficulty
         while self.hash[:blockchain_config.difficulty] != '0' * blockchain_config.difficulty:
             self.nonce += 1
@@ -71,8 +70,8 @@ class Block:
             attempt_count += 1
             print(f"Attempt {attempt_count}: Hash Result: {self.hash}")
 
-        print("Block mined successfully!")
-        
+        print("Block mined successfully!")  # Print the success message after mining
+
         # Format the timestamp after mining
         self.timestamp_str = datetime.utcfromtimestamp(self.timestamp).strftime('%d %b %y %H:%M:%S')
 
@@ -98,4 +97,3 @@ class Block:
         data = deserialize(serialized_data)
         transactions = [Transaction.from_obj(tx) for tx in data['transactions']]
         return Block(data['index'], transactions, data['previous_hash'])
-

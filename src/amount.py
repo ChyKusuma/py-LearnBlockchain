@@ -19,6 +19,10 @@ class Amount:
             "value": self.value,
             "currency": self.currency
         }
+
+    @staticmethod
+    def from_obj(data):
+        return Amount(data['value'], data['currency'])
     
     # Define the total amount of the asset as coinbase
     COINBASE_AMOUNT = 30000000

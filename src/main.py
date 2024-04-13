@@ -29,11 +29,17 @@ if __name__ == "__main__":
     print("Core Developer's Public Key Hash:", core_dev_public_key_hash)
     print("Core Developer's Wallet Address:", core_dev_wallet_address)
 
-    # Creating a miner reward transaction
-    miner_reward = CoinbaseTransaction("coinbase_address", Amount(10, "COINS"))  # Create a CoinbaseTransaction object
+    # Create a blockchain instance
+    blockchain = Blockchain(db)
 
-    # Print the mining reward
-    print("Mining Reward:", miner_reward)
+    # Creating a miner reward transaction for the genesis block
+    miner_reward = CoinbaseTransaction(core_dev_wallet_address, Amount(10, "COINS"))  # Create a CoinbaseTransaction object
+
+    # Append the miner reward transaction to the pending transactions
+    blockchain.add_transaction(miner_reward)
+
+    # Mine the pending transactions to create the genesis block
+    blockchain.mine_pending_transactions()
 
     # Check if the core developer's wallet address already exists in the database
     core_dev_exists = db.check_account_exists(core_dev_wallet_address)
@@ -47,32 +53,12 @@ if __name__ == "__main__":
     else:
         print("Core Developer account already exists in the database.")
 
-    # Create a blockchain instance and append the mined genesis block
-    blockchain = Blockchain(db)
-
-    # Mining Genesis Block
-    genesis_block = Block(0, [])  # Set previous hash to empty string
-    genesis_block.transactions.append(miner_reward)  # Append the miner reward transaction
-    genesis_block.mine_block()  # Mine the genesis block
-    print("Genesis block mined successfully!")
-    print("Index:", genesis_block.index)
-    print("Hash:", genesis_block.hash)
-
-    # Append the mined genesis block to the blockchain
-    blockchain.chain.append(genesis_block)
-
     # Call the display_chain method to print the blockchain information
     blockchain.display_chain()
 
     # Mine the next block
-    next_block = Block(genesis_block.index + 1, [], genesis_block.hash)
-    next_block.mine_block()
-    print("Block mined successfully!")
-    print("Index:", next_block.index)
-    print("Hash:", next_block.hash)
-
-    # Append the mined block to the blockchain
-    blockchain.chain.append(next_block)
+    next_block = Block(len(blockchain.chain), [], blockchain.chain[-1].hash)
+    blockchain.mine_block(next_block)
 
     # Call the display_chain method again to print the updated blockchain information
     blockchain.display_chain()
